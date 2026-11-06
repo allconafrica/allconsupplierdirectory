@@ -38,7 +38,6 @@
       box-shadow: 0 0 0 1px #ef4444;
     }
 
-    /* Icon Box Tint */
     .icon-badge-red {
       background-color: rgba(239, 68, 68, 0.15);
       color: #ef4444;
@@ -115,7 +114,7 @@
           <h2 class="text-lg font-bold text-white flex items-center gap-2">
             <i class="fa-solid fa-truck-field text-red-500"></i> Submit New Supplier
           </h2>
-          <p class="text-xs text-zinc-400">Complete the form fields below to record a new supplier entry.</p>
+          <p class="text-xs text-zinc-400">Complete the form fields below to record a new supplier entry to Google Sheets.</p>
         </div>
         <button onclick="closeSupplierModal()" class="text-zinc-400 hover:text-white text-lg p-1">
           <i class="fa-solid fa-xmark"></i>
@@ -213,7 +212,7 @@
 
         <div class="pt-4 border-t border-zinc-800 flex justify-end gap-3">
           <button type="button" onclick="closeSupplierModal()" class="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-white font-semibold rounded-lg transition">Cancel</button>
-          <button type="submit" class="px-5 py-2 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg transition shadow flex items-center gap-2">
+          <button type="submit" id="submit-supplier-btn" class="px-5 py-2 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg transition shadow flex items-center gap-2">
             <i class="fa-solid fa-paper-plane text-xs"></i> Submit Supplier
           </button>
         </div>
@@ -223,70 +222,31 @@
   </div>
 
   <script>
-    // DEDICATED GOOGLE SHEET TAB ENDPOINT FOR SUPPLIERS
-    const SUPPLIERS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSNynT5Snb9PgJp6ti3QpuHUr9fX8bGKEG10H8kjkbCna_ZfkEC7aM06QrwkjHwxR1n6uu3ZgvvaKu6/pub?gid=0&single=true&output=csv";
+    // GOOGLE APPS SCRIPT WEB APP ENDPOINT FOR FETCHING & SAVING DATA
+    const GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx2VEQ5anPd57W5qMZaHmR9UENJj9MpB2zY8uaoe3IMTxb8f82wsyOEy2S9WmZWX4Q9/exec";
 
     let liveSupplierData = [];
     let collapsedSuppliers = {};
 
-    function parseCSV(text) {
-      const lines = text.trim().split(/\r?\n/);
-      if (lines.length < 2) return [];
-
-      const parseRow = (rowText) => {
-        const result = [];
-        let current = '';
-        let inQuotes = false;
-        for (let i = 0; i < rowText.length; i++) {
-          const char = rowText[i];
-          if (char === '"' && rowText[i + 1] === '"') {
-            current += '"';
-            i++;
-          } else if (char === '"') {
-            inQuotes = !inQuotes;
-          } else if (char === ',' && !inQuotes) {
-            result.push(current.trim());
-            current = '';
-          } else {
-            current += char;
-          }
-        }
-        result.push(current.trim());
-        return result;
-      };
-
-      const headers = parseRow(lines[0]).map(h => h.toLowerCase());
-      
-      return lines.slice(1).map(line => {
-        if (!line.trim()) return null;
-        const values = parseRow(line);
-        const entry = {};
-        headers.forEach((h, idx) => {
-          entry[h] = values[idx] || '';
-        });
-        return entry;
-      }).filter(Boolean);
-    }
-
     async function loadSuppliersData() {
       try {
-        const suppRes = await fetch(SUPPLIERS_CSV_URL);
-        const suppCsv = await suppRes.text();
-        const suppRaw = parseCSV(suppCsv);
+        const response = await fetch(GOOGLE_APPS_SCRIPT_URL);
+        const json = await response.json();
+        const suppRaw = json.suppliers || [];
 
         liveSupplierData = suppRaw.map(r => ({
-          status: r['status'] || 'APPROVED',
-          supplierName: r['supplier name'] || r['company'] || r['supplier'] || '',
-          category: r['category'] || r['service'] || '',
-          pocName: r['poc name'] || r['contact person'] || r['poc'] || '',
-          pocEmail: r['poc email'] || r['email'] || '',
-          pocPhone: r['poc phone'] || r['phone'] || '',
-          servicesOffered: r['services offered'] || r['services'] || '',
-          logistics: r['logistics'] || '',
-          paymentTerms: r['payment terms'] || r['terms'] || '',
-          standardEta: r['standard eta'] || r['eta'] || '',
-          address: r['address'] || '',
-          notes: r['notes'] || ''
+          status: r['STATUS'] || r['status'] || 'APPROVED',
+          supplierName: r['SUPPLIER NAME'] || r['supplier name'] || r['company'] || r['supplier'] || '',
+          category: r['CATEGORY'] || r['category'] || r['service'] || '',
+          pocName: r['POC NAME'] || r['poc name'] || r['contact person'] || r['poc'] || '',
+          pocEmail: r['POC EMAIL'] || r['poc email'] || r['email'] || '',
+          pocPhone: r['POC PHONE'] || r['poc phone'] || r['phone'] || '',
+          servicesOffered: r['SERVICES OFFERED'] || r['services offered'] || r['services'] || '',
+          logistics: r['LOGISTICS'] || r['logistics'] || '',
+          paymentTerms: r['PAYMENT TERMS'] || r['payment terms'] || r['terms'] || '',
+          standardEta: r['STANDARD ETA'] || r['standard eta'] || r['eta'] || '',
+          address: r['ADDRESS'] || r['address'] || '',
+          notes: r['NOTES'] || r['notes'] || ''
         }));
 
         const uniqueLetters = new Set(liveSupplierData.map(s => {
@@ -300,7 +260,7 @@
       } catch (err) {
         console.error("Failed to load Suppliers data:", err);
         document.getElementById('suppliers-list-container').innerHTML = 
-          `<div class="text-center p-8 text-red-500 font-bold"><i class="fa-solid fa-triangle-exclamation mr-2"></i> Error loading supplier directory from Google Sheets.</div>`;
+          `<div class="text-center p-8 text-red-500 font-bold"><i class="fa-solid fa-triangle-exclamation mr-2"></i> Error loading supplier directory from Google Apps Script endpoint.</div>`;
       }
     }
 
@@ -344,10 +304,13 @@
       document.getElementById('add-supplier-form').reset();
     }
 
-    function handleSupplierSubmit(event) {
+    async function handleSupplierSubmit(event) {
       event.preventDefault();
-      
-      const newEntry = {
+      const submitBtn = document.getElementById('submit-supplier-btn');
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin text-xs"></i> Saving to Sheet...`;
+
+      const payload = {
         status: document.getElementById('field-status').value,
         supplierName: document.getElementById('field-supplier-name').value,
         category: document.getElementById('field-category').value,
@@ -362,14 +325,30 @@
         notes: document.getElementById('field-notes').value
       };
 
-      liveSupplierData.unshift(newEntry);
-      
-      const firstLetter = (newEntry.supplierName.charAt(0) || '').toUpperCase();
-      const key = /[A-Z]/.test(firstLetter) ? firstLetter : '#';
-      collapsedSuppliers[key] = false;
+      try {
+        await fetch(GOOGLE_APPS_SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
 
-      closeSupplierModal();
-      renderSuppliers();
+        liveSupplierData.unshift(payload);
+        
+        const firstLetter = (payload.supplierName.charAt(0) || '').toUpperCase();
+        const key = /[A-Z]/.test(firstLetter) ? firstLetter : '#';
+        collapsedSuppliers[key] = false;
+
+        closeSupplierModal();
+        renderSuppliers();
+      } catch (err) {
+        console.error("Save error:", err);
+        alert("Could not post to Google Sheet. UI updated locally.");
+        closeSupplierModal();
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = `<i class="fa-solid fa-paper-plane text-xs"></i> Submit Supplier`;
+      }
     }
 
     function renderSuppliers() {
