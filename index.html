@@ -14,34 +14,23 @@
     tailwind.config = { darkMode: 'class' }
   </script>
   <style>
-    /* Dark Mode Modern Theme (Matching Dashboard Palette) */
     html.dark, html.dark body {
       background-color: #0b0b0c !important;
       color: #f4f4f5 !important;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
-
-    /* Form Text Inputs & Selects */
     html.dark input, html.dark select, html.dark textarea {
       background-color: #27272a !important;
       color: #ffffff !important;
       border-color: #3f3f46 !important;
     }
-
     html.dark input::placeholder, html.dark textarea::placeholder {
       color: #a1a1aa !important;
     }
-
     html.dark input:focus, html.dark select:focus, html.dark textarea:focus {
       outline: none;
       border-color: #ef4444 !important;
       box-shadow: 0 0 0 1px #ef4444;
-    }
-
-    .icon-badge-red {
-      background-color: rgba(239, 68, 68, 0.15);
-      color: #ef4444;
-      border: 1px solid rgba(239, 68, 68, 0.2);
     }
   </style>
 </head>
@@ -50,9 +39,7 @@
   <!-- WEB HEADER -->
   <header class="bg-[#121215] text-white shadow-lg border-b border-zinc-800">
     <div class="max-w-7xl mx-auto px-6 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
-      
       <div class="flex items-center gap-4">
-        <!-- BRANDING LOGO -->
         <a href="#" class="flex items-center gap-3 hover:opacity-90 transition group">
           <div class="bg-white p-1 rounded flex items-center justify-center h-10 min-w-[110px]">
             <img src="./ALLCON-Logo.jpg" alt="ALLCON Logo" class="h-8 w-auto object-contain" onerror="this.onerror=null; this.outerHTML='<div class=\'bg-red-600 text-white font-black px-2.5 py-0.5 rounded text-lg tracking-wider\'>ALLCON</div>';">
@@ -64,22 +51,17 @@
           </h1>
         </div>
       </div>
-      
       <div class="flex items-center gap-3 text-xs font-semibold text-zinc-400">
         <span class="inline-flex items-center gap-1.5 bg-[#18181b] px-3.5 py-2 rounded-xl border border-zinc-800 text-emerald-400">
           <i class="fa-solid fa-arrows-rotate text-[10px] fa-spin"></i> Google Sheets Connected
         </span>
       </div>
-
     </div>
   </header>
 
   <!-- MAIN APPLICATION CONTAINER -->
   <main class="max-w-7xl mx-auto px-6 py-8 flex-grow w-full">
-
-    <!-- SUPPLIERS DIRECTORY VIEW -->
     <section id="view-suppliers" class="block">
-      
       <!-- CONTROLS BAR -->
       <div class="bg-[#18181b] p-4 rounded-xl border border-zinc-800 mb-6 flex flex-col md:flex-row justify-between items-center gap-4 shadow-xl">
         <div class="w-full md:w-1/2 relative">
@@ -100,15 +82,12 @@
       <div id="suppliers-list-container" class="space-y-6">
         <div class="text-center p-8 text-zinc-500"><i class="fa-solid fa-spinner fa-spin mr-2"></i> Fetching Live Supplier Data...</div>
       </div>
-
     </section>
-
   </main>
 
   <!-- SUBMIT NEW SUPPLIER MODAL -->
   <div id="new-supplier-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
     <div class="bg-[#18181b] border border-zinc-800 rounded-2xl max-w-2xl w-full p-6 shadow-2xl relative my-8">
-      
       <div class="flex justify-between items-center border-b border-zinc-800 pb-4 mb-6">
         <div>
           <h2 class="text-lg font-bold text-white flex items-center gap-2">
@@ -116,15 +95,11 @@
           </h2>
           <p class="text-xs text-zinc-400">Complete the form fields below to record a new supplier entry to Google Sheets.</p>
         </div>
-        <button onclick="closeSupplierModal()" class="text-zinc-400 hover:text-white text-lg p-1">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
+        <button onclick="closeSupplierModal()" class="text-zinc-400 hover:text-white text-lg p-1"><i class="fa-solid fa-xmark"></i></button>
       </div>
 
       <form id="add-supplier-form" onsubmit="handleSupplierSubmit(event)" class="space-y-4 text-xs">
-        
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <!-- A1: STATUS -->
           <div>
             <label class="block font-bold text-zinc-300 mb-1">A1: STATUS</label>
             <select id="field-status" required class="w-full p-2.5 rounded-lg border border-zinc-800 bg-[#27272a] text-white">
@@ -134,46 +109,32 @@
               <option value="NO STATUS">NO STATUS</option>
             </select>
           </div>
-
-          <!-- B1: SUPPLIER NAME -->
           <div>
             <label class="block font-bold text-zinc-300 mb-1">B1: SUPPLIER NAME</label>
             <input type="text" id="field-supplier-name" required placeholder="Company Name" class="w-full p-2.5 rounded-lg border border-zinc-800 bg-[#27272a] text-white">
           </div>
-
-          <!-- C1: CATEGORY -->
           <div>
             <label class="block font-bold text-zinc-300 mb-1">C1: CATEGORY</label>
-            <input type="text" id="field-category" placeholder="e.g. Steel Fabrication, Fasteners" class="w-full p-2.5 rounded-lg border border-zinc-800 bg-[#27272a] text-white">
+            <input type="text" id="field-category" placeholder="e.g. Steel Fabrication" class="w-full p-2.5 rounded-lg border border-zinc-800 bg-[#27272a] text-white">
           </div>
-
-          <!-- D1: POC NAME -->
           <div>
             <label class="block font-bold text-zinc-300 mb-1">D1: POC NAME</label>
-            <input type="text" id="field-poc-name" placeholder="Contact Person Name" class="w-full p-2.5 rounded-lg border border-zinc-800 bg-[#27272a] text-white">
+            <input type="text" id="field-poc-name" placeholder="Contact Person" class="w-full p-2.5 rounded-lg border border-zinc-800 bg-[#27272a] text-white">
           </div>
-
-          <!-- E1: POC EMAIL -->
           <div>
             <label class="block font-bold text-zinc-300 mb-1">E1: POC EMAIL</label>
             <input type="email" id="field-poc-email" placeholder="name@supplier.com" class="w-full p-2.5 rounded-lg border border-zinc-800 bg-[#27272a] text-white">
           </div>
-
-          <!-- F1: POC PHONE -->
           <div>
             <label class="block font-bold text-zinc-300 mb-1">F1: POC PHONE</label>
             <input type="tel" id="field-poc-phone" placeholder="+27 ..." class="w-full p-2.5 rounded-lg border border-zinc-800 bg-[#27272a] text-white">
           </div>
         </div>
-
-        <!-- G1: SERVICES OFFERED -->
         <div>
           <label class="block font-bold text-zinc-300 mb-1">G1: SERVICES OFFERED</label>
-          <input type="text" id="field-services" placeholder="e.g. Structural Steel Cutting, Galvanizing" class="w-full p-2.5 rounded-lg border border-zinc-800 bg-[#27272a] text-white">
+          <input type="text" id="field-services" placeholder="Services offered..." class="w-full p-2.5 rounded-lg border border-zinc-800 bg-[#27272a] text-white">
         </div>
-
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <!-- H1: LOGISTICS -->
           <div>
             <label class="block font-bold text-zinc-300 mb-1">H1: LOGISTICS</label>
             <select id="field-logistics" class="w-full p-2.5 rounded-lg border border-zinc-800 bg-[#27272a] text-white">
@@ -181,8 +142,6 @@
               <option value="DELIVERY">DELIVERY</option>
             </select>
           </div>
-
-          <!-- I1: PAYMENT TERMS -->
           <div>
             <label class="block font-bold text-zinc-300 mb-1">I1: PAYMENT TERMS</label>
             <select id="field-payment-terms" class="w-full p-2.5 rounded-lg border border-zinc-800 bg-[#27272a] text-white">
@@ -190,39 +149,30 @@
               <option value="COD">COD</option>
             </select>
           </div>
-
-          <!-- J1: STANDARD ETA -->
           <div>
             <label class="block font-bold text-zinc-300 mb-1">J1: STANDARD ETA</label>
-            <input type="text" id="field-standard-eta" placeholder="Delivery timeline (e.g. 3-5 Working Days)" class="w-full p-2.5 rounded-lg border border-zinc-800 bg-[#27272a] text-white">
+            <input type="text" id="field-standard-eta" placeholder="e.g. 3-5 Working Days" class="w-full p-2.5 rounded-lg border border-zinc-800 bg-[#27272a] text-white">
           </div>
         </div>
-
-        <!-- K1: ADDRESS -->
         <div>
           <label class="block font-bold text-zinc-300 mb-1">K1: ADDRESS</label>
-          <input type="text" id="field-address" placeholder="Physical Address / Location" class="w-full p-2.5 rounded-lg border border-zinc-800 bg-[#27272a] text-white">
+          <input type="text" id="field-address" placeholder="Physical Address" class="w-full p-2.5 rounded-lg border border-zinc-800 bg-[#27272a] text-white">
         </div>
-
-        <!-- L1: NOTES -->
         <div>
           <label class="block font-bold text-zinc-300 mb-1">L1: NOTES</label>
-          <textarea id="field-notes" rows="2" placeholder="Comments or notes on supplier..." class="w-full p-2.5 rounded-lg border border-zinc-800 bg-[#27272a] text-white"></textarea>
+          <textarea id="field-notes" rows="2" placeholder="Comments..." class="w-full p-2.5 rounded-lg border border-zinc-800 bg-[#27272a] text-white"></textarea>
         </div>
-
         <div class="pt-4 border-t border-zinc-800 flex justify-end gap-3">
           <button type="button" onclick="closeSupplierModal()" class="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-white font-semibold rounded-lg transition">Cancel</button>
           <button type="submit" id="submit-supplier-btn" class="px-5 py-2 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg transition shadow flex items-center gap-2">
             <i class="fa-solid fa-paper-plane text-xs"></i> Submit Supplier
           </button>
         </div>
-
       </form>
     </div>
   </div>
 
   <script>
-    // GOOGLE APPS SCRIPT WEB APP ENDPOINT FOR FETCHING & SAVING DATA
     const GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx2VEQ5anPd57W5qMZaHmR9UENJj9MpB2zY8uaoe3IMTxb8f82wsyOEy2S9WmZWX4Q9/exec";
 
     let liveSupplierData = [];
@@ -232,21 +182,24 @@
       try {
         const response = await fetch(GOOGLE_APPS_SCRIPT_URL);
         const json = await response.json();
+        
+        console.log("Fetched JSON payload from Apps Script:", json);
+
         const suppRaw = json.suppliers || [];
 
         liveSupplierData = suppRaw.map(r => ({
-          status: r['STATUS'] || r['status'] || 'APPROVED',
-          supplierName: r['SUPPLIER NAME'] || r['supplier name'] || r['company'] || r['supplier'] || '',
-          category: r['CATEGORY'] || r['category'] || r['service'] || '',
-          pocName: r['POC NAME'] || r['poc name'] || r['contact person'] || r['poc'] || '',
-          pocEmail: r['POC EMAIL'] || r['poc email'] || r['email'] || '',
-          pocPhone: r['POC PHONE'] || r['poc phone'] || r['phone'] || '',
-          servicesOffered: r['SERVICES OFFERED'] || r['services offered'] || r['services'] || '',
-          logistics: r['LOGISTICS'] || r['logistics'] || '',
-          paymentTerms: r['PAYMENT TERMS'] || r['payment terms'] || r['terms'] || '',
-          standardEta: r['STANDARD ETA'] || r['standard eta'] || r['eta'] || '',
-          address: r['ADDRESS'] || r['address'] || '',
-          notes: r['NOTES'] || r['notes'] || ''
+          status: r['STATUS'] || r['status'] || r['Status'] || 'APPROVED',
+          supplierName: r['SUPPLIER NAME'] || r['supplier name'] || r['Supplier Name'] || r['company'] || r['supplier'] || '',
+          category: r['CATEGORY'] || r['category'] || r['Category'] || r['service'] || '',
+          pocName: r['POC NAME'] || r['poc name'] || r['Poc Name'] || r['contact person'] || r['poc'] || '',
+          pocEmail: r['POC EMAIL'] || r['poc email'] || r['Poc Email'] || r['email'] || '',
+          pocPhone: r['POC PHONE'] || r['poc phone'] || r['Poc Phone'] || r['phone'] || '',
+          servicesOffered: r['SERVICES OFFERED'] || r['services offered'] || r['Services Offered'] || r['services'] || '',
+          logistics: r['LOGISTICS'] || r['logistics'] || r['Logistics'] || '',
+          paymentTerms: r['PAYMENT TERMS'] || r['payment terms'] || r['Payment Terms'] || r['terms'] || '',
+          standardEta: r['STANDARD ETA'] || r['standard eta'] || r['Standard Eta'] || r['eta'] || '',
+          address: r['ADDRESS'] || r['address'] || r['Address'] || '',
+          notes: r['NOTES'] || r['notes'] || r['Notes'] || ''
         }));
 
         const uniqueLetters = new Set(liveSupplierData.map(s => {
@@ -260,7 +213,7 @@
       } catch (err) {
         console.error("Failed to load Suppliers data:", err);
         document.getElementById('suppliers-list-container').innerHTML = 
-          `<div class="text-center p-8 text-red-500 font-bold"><i class="fa-solid fa-triangle-exclamation mr-2"></i> Error loading supplier directory from Google Apps Script endpoint.</div>`;
+          `<div class="text-center p-8 text-red-500 font-bold"><i class="fa-solid fa-triangle-exclamation mr-2"></i> Error loading supplier directory: ${err.message}</div>`;
       }
     }
 
@@ -366,7 +319,12 @@
       document.getElementById('supplier-count').innerText = `Showing ${filtered.length} Suppliers`;
 
       if (filtered.length === 0) {
-        container.innerHTML = `<div class="text-center p-8 text-zinc-500">No suppliers found matching your query.</div>`;
+        container.innerHTML = `
+          <div class="text-center p-8 bg-[#18181b] border border-zinc-800 rounded-xl space-y-2">
+            <div class="text-amber-400 font-bold text-sm"><i class="fa-solid fa-circle-exclamation mr-1"></i> No suppliers found.</div>
+            <p class="text-xs text-zinc-400">Total records loaded from Google Sheet: <strong>${liveSupplierData.length}</strong></p>
+            <p class="text-[11px] text-zinc-500">Check your browser console (F12 -> Console) to see the exact data keys returned by Apps Script.</p>
+          </div>`;
         return;
       }
 
